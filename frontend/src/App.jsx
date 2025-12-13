@@ -14,7 +14,7 @@ import { authStore } from './store/authStore.js';
 
 function App() {
 
-    const {loggedUser} = authStore
+    const { loggedUser } = authStore();
  return <div className='min-h-screen bg-gray-800 text-white'>
     <Navbar/>
     <Routes>
