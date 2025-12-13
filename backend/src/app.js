@@ -34,7 +34,7 @@ app.use(cookieParser());
 // `cors()` middleware above handles OPTIONS preflight automatically, so
 // we don't need an explicit handler here.
 
-const port = process.env.PORT;
+const port = process.env.PORT || 5000;
 
 // Routes
 app.use("/api/auth", authRoute);
