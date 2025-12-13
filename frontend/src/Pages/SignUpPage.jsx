@@ -1,7 +1,8 @@
 
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { authStore } from "../store/authstore";
+import { authStore } from "../store/authStore";
+//import { authStore } from "../store/authstore";
  //import { authStore } from "../store/authStore.js";
 
 const SignUpPage = () => {
