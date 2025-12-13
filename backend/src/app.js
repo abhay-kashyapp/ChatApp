@@ -17,7 +17,8 @@ dotenv.config();
 // CORS must be registered before body parsers so that even early errors
 // (like a large payload causing a 413) include CORS headers in the response.
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: ["http://localhost:5173",
+    "https://chatapp-3-w37m.onrender.com"],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "Accept"],
