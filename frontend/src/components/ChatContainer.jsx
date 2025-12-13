@@ -1,4 +1,4 @@
-import ChatHeader from "./chatHeader";
+import ChatHeader from "./ChatHeader";
 import MessageInput from "./MessageInput";
 import Messages from "./Messages";
 
