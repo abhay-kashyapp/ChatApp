@@ -7,13 +7,14 @@ import SignUpPage from './Pages/SignUpPage.jsx';
 import LoginPage from './Pages/LoginPage.jsx';
 import ProfilePage from './Pages/ProfilePage.jsx';
 import { Toaster } from 'react-hot-toast';
-import { authStore } from './store/authstore.js';
+import { authStore } from './store/authStore.js';
+//import { authStore } from './store/authstore.js';
 
 
 
 function App() {
 
-    const {loggedUser} = authStore();
+    const {loggedUser} = authStore
  return <div className='min-h-screen bg-gray-800 text-white'>
     <Navbar/>
     <Routes>
