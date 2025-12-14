@@ -25,8 +25,9 @@ export const signup = async (req, res) => {
     })
     await newUser.save()
     if(newUser){
-      tokenGeneration(newUser._id,res)
-      res.json(newUser)
+      const token = tokenGeneration(newUser._id, res);
+      res.setHeader("x-auth-token", token);
+      res.json(newUser);
     }
   } catch (error) {
     console.log("error in signup:", error.message);
@@ -46,8 +47,10 @@ export const login = async (req, res) => {
       if(!ispassword){
         return res.status(400).json({message:"InCorrect Password  "})
       } 
-      tokenGeneration(user._id,res)
-      res.status(200).json(user)
+      const token = tokenGeneration(user._id, res);
+      // Ensure token header is available to the client for Authorization header
+      res.setHeader("x-auth-token", token);
+      res.status(200).json(user);
   } catch (error) {
     console.log("error in login:", error.message);
     res.status(500).json({ message: " Internal Server Error" });//500 means server error 

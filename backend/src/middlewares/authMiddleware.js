@@ -3,8 +3,21 @@ import User from "../models/userModel.js";
 
 export const checkAuth = async(req, res,next) => {
     try {
-        const token = req.cookies.jwt;
+        // Debug: show incoming auth related values
+        console.log("[authMiddleware] cookies:", req.cookies);
+        console.log("[authMiddleware] authorization header:", req.headers.authorization || req.headers.Authorization);
+
+        // Prefer cookie-based JWT (httpOnly), fall back to Authorization header
+        let token = req.cookies?.jwt;
+        if (!token) {
+            const authHeader = req.headers.authorization || req.headers.Authorization;
+            if (authHeader && authHeader.startsWith("Bearer ")) {
+                token = authHeader.split(" ")[1];
+            }
+        }
+
         if(!token){
+           console.log("[authMiddleware] no token found");
            return res.status(401).json({ message: "Authentication token is required" });
         }
         let decode;

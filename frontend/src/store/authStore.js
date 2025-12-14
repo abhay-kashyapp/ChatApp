@@ -91,6 +91,12 @@ export const authStore = create((set, get) => ({
   signup: async (data) => {
     try {
       const res = await axiosInstance.post("/auth/signup", data);
+      // store token header (sent by backend) for Authorization
+      const token = res.headers["x-auth-token"];
+      if (token) {
+        localStorage.setItem("token", token);
+        axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      }
       set({ loggedUser: res.data });
       toast.success("Signup Successful");
       get().connectSocket();
@@ -104,6 +110,11 @@ export const authStore = create((set, get) => ({
   login: async (data) => {
     try {
       const res = await axiosInstance.post("/auth/login", data);
+      const token = res.headers["x-auth-token"];
+      if (token) {
+        localStorage.setItem("token", token);
+        axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      }
       set({ loggedUser: res.data });
       toast.success("Login Successful");
       get().connectSocket();
@@ -117,6 +128,8 @@ export const authStore = create((set, get) => ({
     try {
       await axiosInstance.get("/auth/logout");
       set({ loggedUser: null });
+      localStorage.removeItem("token");
+      delete axiosInstance.defaults.headers.common["Authorization"];
       toast.success("Logout Successful");
       get().disconnectSocket();
     } catch (error) {
