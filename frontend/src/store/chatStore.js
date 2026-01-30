@@ -1,6 +1,6 @@
-import {create} from "zustand";
+import { create } from "zustand";
 import toast from "react-hot-toast";
-import {axiosInstance} from "../lib/axios";
+import { axiosInstance } from "../lib/axios";
 import { authStore } from "./authStore";
 
 
@@ -12,7 +12,7 @@ export const chatStore = create((set, get) => ({
     getUsers: async () => {
         try {
             const res = await axiosInstance.get("/message/users");
-            set({users: res.data});
+            set({ users: res.data });
             toast.success("Users fetched successfully");
 
         } catch (error) {
@@ -21,45 +21,48 @@ export const chatStore = create((set, get) => ({
     },
 
     getMessages: async () => {
-       const {selectedUser} = get();
+        const { selectedUser } = get();
         try {
             const res = await axiosInstance.get(`/message/getmessages/${selectedUser._id}`);
-            set({messages: res.data});
+            set({ messages: res.data });
             toast.success("Messages fetched successfully");
         } catch (error) {
             toast.error("Failed to fetch messages");
         }
-        },
+    },
 
-        sendMessage: async (data) => {
-            const { selectedUser, messages } = get();
-            try {
-                const res = await axiosInstance.post(
-                    `/message/sendmessage/${selectedUser._id}`,
-                    data
-                );
-                set({ messages: [...messages, res.data] });
-                toast.success("Message sent successfully");
-                return res.data;
-            } catch (error) {
-                toast.error("Failed to send message");
-                throw error;
-            }
-        },
+    sendMessage: async (data) => {
+        const { selectedUser, messages } = get();
+        try {
+            const res = await axiosInstance.post(
+                `/message/sendmessage/${selectedUser._id}`,
+                data
+            );
+            set({ messages: [...messages, res.data] });
+            toast.success("Message sent successfully");
+            return res.data;
+        } catch (error) {
+            toast.error("Failed to send message");
+            throw error;
+        }
+    },
 
-        setSelectedUser: (user) => set({selectedUser: user}),
+    setSelectedUser: (user) => set({ selectedUser: user }),
 
+    // Clear all chat state (called on logout)
+    clearChatState: () => set({ users: [], messages: [], selectedUser: null }),
 
-        // Real-time listener placeholders (no-op) to prevent runtime errors
-        listenForNewMessage: () => {
-            const socket = authStore.getState().socket;
-            socket.on("newMessage",(newMessage) => {
-                set({ messages: [...get().messages, newMessage ] }); 
-            })
-        },
-        stopListeningForMessages: () => {
-            const socket = authStore.getState  ().socket;
-            socket.off("newMessage");
-        },
+    // Real-time listener placeholders (no-op) to prevent runtime errors
+    listenForNewMessage: () => {
+        const socket = authStore.getState().socket;
+        if (!socket) return; // Guard against null socket
+        socket.on("newMessage", (newMessage) => {
+            set({ messages: [...get().messages, newMessage] });
+        })
+    },
+    stopListeningForMessages: () => {
+        const socket = authStore.getState().socket;
+        if (!socket) return; // Guard against null socket
+        socket.off("newMessage");
+    },
 }));
-    

@@ -62,9 +62,16 @@ export const authStore = create((set, get) => ({
         try {
             await axiosInstance.get("/auth/logout");
             get().disconnectSocket();
+            // Clear all user-related state
             set({ loggedUser: null, onlineUsers: [] });
+            // Also clear chat state by resetting chatStore
+            const chatStoreModule = await import('./chatStore.js');
+            chatStoreModule.chatStore.getState().clearChatState?.();
             toast.success("Logout Successful");
         } catch (error) {
+            // Even if logout API fails, still clear local state
+            get().disconnectSocket();
+            set({ loggedUser: null, onlineUsers: [] });
             toast.error("Logout Failed: Please try again later");
         }
     },
