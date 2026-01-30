@@ -1,5 +1,6 @@
 
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import { authStore } from "../store/authStore";
 
@@ -96,12 +97,12 @@ const SignUpPage = () => {
           </div>
           <p className="mt-6 text-center text-gray-300">
             Already have an account?{" "}
-            <a
-              href="/login"
+            <Link
+              to="/login"
               className="text-blue-400 font-semibold hover:underline"
             >
               Login
-            </a>
+            </Link>
           </p>
         </div>
       </div>

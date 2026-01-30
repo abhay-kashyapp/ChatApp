@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { authStore } from "../store/authStore";
 
 
@@ -75,12 +75,12 @@ const LoginPage = () => {
           </div>
           <p className="mt-6 text-center text-gray-300">
             Don't have an account?{" "}
-            <a
-              href="/signup"
+            <Link
+              to="/signup"
               className="text-blue-400 font-semibold hover:underline"
             >
               Sign up
-            </a>
+            </Link>
           </p>
         </div>
       </div>
