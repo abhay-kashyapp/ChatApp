@@ -14,12 +14,22 @@ export const authStore = create((set, get) => ({
     // Check if user is already authenticated (called on app load)
     checkAuth: async () => {
         try {
+            console.log("Checking auth...");
             const res = await axiosInstance.get("/auth/check");
-            set({ loggedUser: res.data });
-            get().connectSocket();
+            console.log("Auth check response:", res.data);
+            // Only set loggedUser if we got a valid user object with _id
+            if (res.data && res.data._id) {
+                set({ loggedUser: res.data });
+                get().connectSocket();
+            } else {
+                console.log("Invalid user data received, setting loggedUser to null");
+                set({ loggedUser: null });
+            }
         } catch (error) {
+            console.log("Auth check failed:", error?.response?.status, error?.message);
             set({ loggedUser: null });
         } finally {
+            console.log("Auth check complete, isCheckingAuth: false");
             set({ isCheckingAuth: false });
         }
     },
