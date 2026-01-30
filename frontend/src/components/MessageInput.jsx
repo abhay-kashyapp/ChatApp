@@ -39,15 +39,15 @@ const MessageInput = () => {
   };
 
   return (
-    <div className="p-1 md:p-2 bg-base-200 fixed bottom-2">
+    <div className="p-2 md:p-3 bg-base-200 w-full">
       <div className="flex items-center gap-2">
         <button
           type="button"
           onClick={() => fileInputRef.current.click()}
-          className=" rounded-lg hover:bg-base-300 flex items-center justify-center"
+          className="rounded-lg hover:bg-base-300 flex items-center justify-center flex-shrink-0"
           title="Attach image"
         >
-          <MdImage className="size-11 text-primary" />
+          <MdImage className="size-8 md:size-10 text-primary" />
         </button>
         <input
           type="file"
@@ -59,13 +59,13 @@ const MessageInput = () => {
         <input
           type="text"
           placeholder="Type a message..."
-          className="flex-1 p-2 rounded-lg md:rounded-xl focus:outline-none focus:ring-1 focus:ring-primary transition-colors text-gray-100 bg-slate-700 shadow-sm border border-base-300 text-sm md:text-base xl:w-[950px] sm:w-[520px]"
+          className="flex-1 min-w-0 p-2 md:p-3 rounded-lg md:rounded-xl focus:outline-none focus:ring-1 focus:ring-primary transition-colors text-gray-100 bg-slate-700 shadow-sm border border-base-300 text-sm md:text-base"
           value={text}
           onChange={(e) => setText(e.target.value)}
         />
         <button
           onClick={handleSendMessage}
-          className="p-2 md:p-3 bg-primary text-white rounded-lg md:rounded-xl hover:bg-primary-focus flex items-center justify-center shadow-xl bg-slate-700"
+          className="p-2 md:p-3 bg-primary text-white rounded-lg md:rounded-xl hover:bg-primary-focus flex items-center justify-center shadow-xl bg-slate-700 flex-shrink-0"
         >
           <LuSendHorizontal className="w-5 h-5" />
         </button>

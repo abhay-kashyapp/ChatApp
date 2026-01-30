@@ -11,11 +11,11 @@ const Sidebar = () => {
   }, [getUsers]);
 
   return (
-    <aside className="h-full w-20 lg:w-72 flex flex-col transition-all duration-200 bg-gradient-to-b from-base-200 to-base-100">
+    <aside className="h-full w-full md:w-20 lg:w-72 flex flex-col transition-all duration-200 bg-gradient-to-b from-base-200 to-base-100">
       <div className=" w-full p-5 bg-base-100/80 backdrop-blur-md shadow-xl">
         <div className="flex items-center gap-3">
-          <FaUserCircle className="size-7 text-primary"/>
-          <span className="font-semibold text-lg hidden lg:block tracking-wide text-primary">
+          <FaUserCircle className="size-7 text-primary" />
+          <span className="font-semibold text-lg tracking-wide text-primary">
             Contacts
           </span>
         </div>
@@ -46,8 +46,8 @@ const Sidebar = () => {
                 <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full shadow"></span>
               )}
             </div>
-            <div className="hidden lg:flex flex-col items-start flex-1 min-w-0">
-              <span className="font-medium text-base-content truncate">
+            <div className="flex flex-col items-start flex-1 min-w-0">
+              <span className="font-medium text-base-content truncate text-sm md:text-base">
                 {user.username}
               </span>
               <span className="text-xs text-base-content/60 truncate">
