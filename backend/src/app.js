@@ -18,8 +18,13 @@ const __dirname = path.resolve();
 // Middlewares
 // CORS must be registered before body parsers so that even early errors
 // (like a large payload causing a 413) include CORS headers in the response.
+const allowedOrigins = [
+    "http://localhost:5173",
+    process.env.CLIENT_URL,
+].filter(Boolean);
+
 app.use(cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    origin: allowedOrigins,
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "Accept"],
