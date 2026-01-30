@@ -1,24 +1,38 @@
-import {create} from "zustand";
+import { create } from "zustand";
 import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
-//import { connect, disconnect, get } from "mongoose";
 import io from "socket.io-client";
 
-export const authStore = create((set,get) => ({
+const BASE_URL = import.meta.env.VITE_SOCKET_URL || "http://localhost:5000";
+
+export const authStore = create((set, get) => ({
     loggedUser: null,
     onlineUsers: [],
-      socket: null,
+    socket: null,
+    isCheckingAuth: true,
 
+    // Check if user is already authenticated (called on app load)
+    checkAuth: async () => {
+        try {
+            const res = await axiosInstance.get("/auth/check");
+            set({ loggedUser: res.data });
+            get().connectSocket();
+        } catch (error) {
+            set({ loggedUser: null });
+        } finally {
+            set({ isCheckingAuth: false });
+        }
+    },
 
-    signup:async (data) => {
+    signup: async (data) => {
         try {
             const res = await axiosInstance.post("/auth/signup", data);
             set({ loggedUser: res.data });
             toast.success("Signup Successful");
             get().connectSocket();
-        } catch (error) { 
-           toast.error( "Signup Failed : Please try again later"); 
-           set({ loggedUser: null });
+        } catch (error) {
+            toast.error("Signup Failed : Please try again later");
+            set({ loggedUser: null });
         }
     },
 
@@ -34,12 +48,12 @@ export const authStore = create((set,get) => ({
         }
     },
 
-    logout: async (  ) => {
+    logout: async () => {
         try {
-           await axiosInstance.get("/auth/logout");
-            set({ loggedUser: null });
-            toast.success("Logout Successful");
+            await axiosInstance.get("/auth/logout");
             get().disconnectSocket();
+            set({ loggedUser: null, onlineUsers: [] });
+            toast.success("Logout Successful");
         } catch (error) {
             toast.error("Logout Failed: Please try again later");
         }
@@ -47,7 +61,7 @@ export const authStore = create((set,get) => ({
 
     updateProfile: async (data) => {
         try {
-            const res = await axiosInstance.put("/auth/update-profile",data);
+            const res = await axiosInstance.put("/auth/update-profile", data);
             set({ loggedUser: res.data });
             toast.success("Profile Updated Successfully");
         } catch (error) {
@@ -55,23 +69,33 @@ export const authStore = create((set,get) => ({
         }
     },
 
-
     connectSocket: () => {
-        const { loggedUser } = get(); 
-        const socket = io("http://localhost:5000",{
-            query: { userId:loggedUser._id }
+        const { loggedUser, socket } = get();
 
-        });  
-        socket.connect();
-        set({ socket : socket });
-        socket.on("getOnlineUsers",(userIds) => {
+        // Don't connect if no user or already connected
+        if (!loggedUser || socket?.connected) {
+            return;
+        }
+
+        const newSocket = io(BASE_URL, {
+            query: { userId: loggedUser._id },
+        });
+
+        newSocket.connect();
+
+        newSocket.on("getOnlineUsers", (userIds) => {
             set({ onlineUsers: userIds });
             console.log("Online Users:", userIds);
         });
+
+        set({ socket: newSocket });
     },
 
-    
     disconnectSocket: () => {
-      if(get().socket?.connected ) get().socket.disconnect();
+        const { socket } = get();
+        if (socket) {
+            socket.disconnect();
+            set({ socket: null });
+        }
     },
 }));

@@ -1,13 +1,20 @@
 
-import { useState } from "react";
-import { authStore } from "../store/authstore";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { authStore } from "../store/authStore";
 
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const { login } = authStore();
+  const login = authStore((s) => s.login);
+  const loggedUser = authStore((s) => s.loggedUser);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (loggedUser) navigate("/");
+  }, [loggedUser, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
