@@ -1,15 +1,15 @@
 
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { authStore } from "../store/authstore";
- //import { authStore } from "../store/authStore.js";
+import { authStore } from "../store/authStore";
+
 
 const SignUpPage = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
- const { signup } = authStore();
+  const { signup } = authStore();
 
   const validateCredentials = () => {
     if (!username.trim()) return toast.error("Full name is required");
